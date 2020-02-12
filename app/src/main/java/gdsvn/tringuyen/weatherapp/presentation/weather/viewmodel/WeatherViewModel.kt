@@ -1,4 +1,4 @@
-package gdsvn.tringuyen.weatherapp.presentation.weather
+package gdsvn.tringuyen.weatherapp.presentation.weather.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import android.util.Log
@@ -19,7 +19,7 @@ class WeatherViewModel(private val getWeatherUseCase: GetWeatherUseCase,
         private val TAG = "Test"
     }
 
-    var mNews = MutableLiveData<Data<WeatherPresentation>>()
+    var mWeather = MutableLiveData<Data<WeatherPresentation>>()
 
     fun fetchWeather() {
         Log.d(TAG, "On fetchWeather =============> ")
@@ -31,9 +31,9 @@ class WeatherViewModel(private val getWeatherUseCase: GetWeatherUseCase,
                 }
                 .subscribe({ response ->
                     Log.d(TAG, "On Next Called")
-                    mNews.value = Data(responseType = Status.SUCCESSFUL, data = response)
+                    mWeather.value = Data(responseType = Status.SUCCESSFUL, data = response)
                 }, { error ->
-                    mNews.value = Data(responseType = Status.ERROR, error = Error(error.message))
+                    mWeather.value = Data(responseType = Status.ERROR, error = Error(error.message))
                 }, {
                     Log.d(TAG, "On Complete Called")
                 })
@@ -41,5 +41,5 @@ class WeatherViewModel(private val getWeatherUseCase: GetWeatherUseCase,
         addDisposable(disposable)
     }
 
-    fun getNewsLiveData() = mNews
+    fun getWeatherLiveData() = mWeather
 }

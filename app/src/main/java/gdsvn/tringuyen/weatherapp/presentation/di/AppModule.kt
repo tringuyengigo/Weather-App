@@ -12,7 +12,7 @@ import gdsvn.tringuyen.weatherapp.domain.repository.WeatherRepository
 import gdsvn.tringuyen.weatherapp.domain.usecase.GetWeatherUseCase
 import gdsvn.tringuyen.weatherapp.presentation.common.AsyncFlowableTransformer
 import gdsvn.tringuyen.weatherapp.presentation.mapper.WeatherEntityMapper
-import gdsvn.tringuyen.weatherapp.presentation.weather.WeatherViewModel
+import gdsvn.tringuyen.weatherapp.presentation.weather.viewmodel.WeatherViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module.module
 import org.koin.android.viewmodel.ext.koin.viewModel
@@ -43,7 +43,10 @@ val mLocalModules = module {
 
 val mViewModels = module {
     viewModel {
-        WeatherViewModel(getWeatherUseCase = get(GET_NEWS_USECASE), mapper = WeatherEntityMapper())
+        WeatherViewModel(
+            getWeatherUseCase = get(GET_NEWS_USECASE),
+            mapper = WeatherEntityMapper()
+        )
     }
 }
 

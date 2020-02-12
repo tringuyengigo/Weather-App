@@ -3,4 +3,12 @@
     <string name="card_title">Card Title</string>
     <string name="card_content">Card Content</string>
     <string name="card_author">Card Author</string>
+    <string name="action_search">Search</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="humidity_text">Humidity</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Main fragment</string>
+
 </resources>

@@ -3,10 +3,8 @@ package gdsvn.tringuyen.weatherapp.domain.usecase
 import android.util.Log
 import gdsvn.tringuyen.weatherapp.domain.common.BaseFlowableUseCase
 import gdsvn.tringuyen.weatherapp.domain.common.FlowableRxTransformer
-import gdsvn.tringuyen.weatherapp.data.entity.WeatherEntityData
 import gdsvn.tringuyen.weatherapp.domain.entity.WeatherEntity
 import gdsvn.tringuyen.weatherapp.domain.repository.WeatherRepository
-import gdsvn.tringuyen.weatherapp.presentation.weather.WeatherViewModel
 import io.reactivex.Flowable
 
 

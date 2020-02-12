@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    app:startDestination="@id/blankFragment">
+    <fragment
+        android:id="@+id/blankFragment"
+        android:name="gdsvn.tringuyen.weatherapp.presentation.weather.fragment.MainFragment"
+        android:label="Blank"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_blankFragment_to_detailWeatherFragment"
+            app:destination="@id/detailWeatherFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailWeatherFragment"
+        android:name="gdsvn.tringuyen.weatherapp.presentation.weather.fragment.DetailWeatherFragment"
+        tools:layout="@layout/detail_weather_fragment"
+        android:label="DetailWeatherFragment" />
+</navigation>

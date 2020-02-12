@@ -11,14 +11,9 @@ class WeatherRemoteImpl constructor(private val api: RemoteWeatherApi,
                                     private val dataToEntityMapper: WeatherEntityDataToWeatherEntityMapper): WeatherDataStore {
 
     override fun getWeatherCity(city: String, accessKey: String): Flowable<WeatherEntity> {
-        Log.d("Test", "On WeatherRemoteImpl getRemoteWeatherByCity =============> ¢¢¢¢¢ city ${api.getWeatherByCity("8c6e5b1cc92648064427729c45a37f5d", "London").map {
-            Log.d("Test", "On WeatherRemoteImpl getRemoteWeatherByCity =============> xxxxx city ${it.locationData}")
 
-        }}")
-
-        return api.getWeatherByCity(access_key = accessKey, city = city).map {
-            Log.d("Test", "On WeatherRemoteImpl getRemoteWeatherByCity =============> city ${it} accessKey ${accessKey}")
-
+        return api.getWeatherByCity(city = city, access_key = accessKey).map {
+            Log.d("Test", "On WeatherRemoteImpl data $it")
             dataToEntityMapper.mapToEntity(it)
         }
     }
