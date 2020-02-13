@@ -1,14 +1,17 @@
 <resources>
     <string name="app_name">Weather App</string>
-    <string name="card_title">Card Title</string>
-    <string name="card_content">Card Content</string>
-    <string name="card_author">Card Author</string>
+
     <string name="action_search">Search</string>
     <string name="action_refresh">Refresh</string>
     <string name="humidity_text">Humidity</string>
-
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Main fragment</string>
+    <string name="downloading_data">Downloading your data ...</string>
+    <string name="retry_loading">Retry</string>
+    <string name="error_loading">Error</string>
+    <string name="search_title">Search for city</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+
+
 
 </resources>

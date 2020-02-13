@@ -13,7 +13,6 @@ class WeatherRemoteImpl constructor(private val api: RemoteWeatherApi,
     override fun getWeatherCity(city: String, accessKey: String): Flowable<WeatherEntity> {
 
         return api.getWeatherByCity(city = city, access_key = accessKey).map {
-            Log.d("Test", "On WeatherRemoteImpl data $it")
             dataToEntityMapper.mapToEntity(it)
         }
     }

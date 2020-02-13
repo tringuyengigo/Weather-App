@@ -1,20 +1,25 @@
 package gdsvn.tringuyen.weatherapp.presentation.weather.fragment
 
+import android.app.ProgressDialog
+import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
+import android.text.InputType
 import android.view.*
-import android.widget.FrameLayout
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import gdsvn.tringuyen.weatherapp.R
+import gdsvn.tringuyen.weatherapp.presentation.entity.Status
 import gdsvn.tringuyen.weatherapp.presentation.weather.adapter.WeatherListAdapter
 import gdsvn.tringuyen.weatherapp.presentation.weather.viewmodel.WeatherViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
-import gdsvn.tringuyen.weatherapp.presentation.entity.Status
-import kotlinx.android.synthetic.main.fragment_main.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -31,10 +36,12 @@ class MainFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private var cityCurrent = "";
 
     private val weatherViewModel: WeatherViewModel by viewModel()
     private lateinit var listAdapter: WeatherListAdapter
     private lateinit var recyclerView : RecyclerView
+    private var progressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,33 +50,44 @@ class MainFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
         setHasOptionsMenu(true);
+
         listAdapter = WeatherListAdapter()
-
-        weatherViewModel.fetchWeather()
-
+        createDialog(context)
     }
 
-//    override fun onCreateView(
-//        inflater: LayoutInflater, container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        recycler_view.layoutManager = FrameLayout(this, RecyclerView.VERTICAL, false)
-//        recycler_view.adapter = listAdapter
-//
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_main, container, false)
-//    }
+    private fun createDialog(context: Context?) {
+        progressDialog = ProgressDialog(context)
+        progressDialog!!.setMessage(context!!.getString(R.string.downloading_data))
+        progressDialog!!.setCanceledOnTouchOutside(false)
+    }
+
+    private fun showDialog() {
+        if(!progressDialog?.isShowing!!) {
+            progressDialog?.show()
+        }
+    }
+
+    private fun showErrorDialog(errorMessage: Error?) {
+        var cancelDialog : ProgressDialog = ProgressDialog(context)
+        cancelDialog.setTitle(context!!.getString(R.string.error_loading))
+        cancelDialog.setMessage(errorMessage?.message)
+        cancelDialog.setButton(context!!.getString(R.string.retry_loading),
+            DialogInterface.OnClickListener { dialog, which ->
+                if (cityCurrent.isNotEmpty()) {
+                    Timber.d("Search for city: $cityCurrent")
+                    weatherViewModel.fetchWeather(cityCurrent)
+                }
+                return@OnClickListener
+            })
+        cancelDialog.show()
+    }
 
 
-//    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-//                              savedInstanceState: Bundle?): View? {
-//        val rootView = inflater.inflate(R.layout.fragment_main, container, false)
-//        recyclerView = rootView.findViewById(R.id.list_recycler_view) as RecyclerView
-//        recyclerView.layoutManager = LinearLayoutManager(activity)
-//        recyclerView.adapter = listAdapter
-//        return rootView
-//    }
-
+    private fun dismissDialog() {
+        if(progressDialog?.isShowing!!) {
+            progressDialog?.dismiss()
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -78,12 +96,12 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Timber.v("onViewCreated()");
         recyclerView = view.findViewById(R.id.list_recycler_view) as RecyclerView
         recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
             adapter = listAdapter
         }
+        
     }
 
 
@@ -92,13 +110,15 @@ class MainFragment : Fragment() {
         weatherViewModel.getWeatherLiveData().observe(this, Observer {
             when (it?.responseType) {
                 Status.ERROR -> {
-                    //Error handling
+                    showErrorDialog(it.error)
                 }
                 Status.LOADING -> {
-                    //Progress
+                    Timber.v("Loading data........... LOADING");
+                    showDialog()
                 }
                 Status.SUCCESSFUL -> {
-                    // On Successful response
+                    dismissDialog()
+                    Timber.v("Loading data........... SUCCESSFUL");
                 }
             }
             it?.data?.let {
@@ -139,12 +159,47 @@ class MainFragment : Fragment() {
         val id = item.itemId
         if (id == R.id.action_refresh) {
             Timber.d("Click R.id.action_refresh")
+            if (cityCurrent.isNotEmpty()) {
+                Timber.d("Search for city: $cityCurrent")
+                weatherViewModel.fetchWeather(cityCurrent)
+                showDialog()
+            }
             return true
         }
         if (id == R.id.action_search) {
             Timber.d("Click R.id.action_search")
+            searchCities()
             return true
         }
         return super.onOptionsItemSelected(item)
     }
+
+
+    private fun searchCities() {
+        val input = EditText(context)
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        input.maxLines = 1
+        input.isSingleLine = true
+        val inputLayout = TextInputLayout(context)
+        inputLayout.setPadding(32, 0, 32, 0)
+        inputLayout.addView(input)
+        val alert: android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(context)
+        alert.setTitle(this.getString(R.string.search_title))
+        alert.setView(inputLayout)
+        alert.setPositiveButton(R.string.dialog_ok,
+            DialogInterface.OnClickListener { dialog, whichButton ->
+                val cityCurrent = input.text.toString()
+
+                if (cityCurrent.isNotEmpty()) {
+                    Timber.d("Search for city: $cityCurrent")
+                    weatherViewModel.fetchWeather(cityCurrent)
+                }
+            })
+        alert.setNegativeButton(R.string.dialog_cancel,
+            DialogInterface.OnClickListener { dialog, whichButton ->
+                // Cancelled
+            })
+        alert.show()
+    }
+
 }

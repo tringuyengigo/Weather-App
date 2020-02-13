@@ -39,10 +39,10 @@ class WeatherListAdapter : RecyclerView.Adapter<WeatherListAdapter.WeatherViewHo
         fun bind(weatherPublisherItem: WeatherPresentation) {
             with(itemView) {
                 Timber.v("Data Weather at WeatherActivity =========>  ${Gson().toJson(weatherPublisherItem)}");
-                textViewCardCityName.text = weatherPublisherItem.location.region + ", " + weatherPublisherItem.location.country
+                textViewCardCityName.text = weatherPublisherItem.request?.query
                 textViewCardCurrentTemp.text = weatherPublisherItem.current.temperature.toString() + "°"
                 textViewCardWeatherDescription.text = weatherPublisherItem.current.weather_descriptions?.get(0).toString()
-
+                textViewCardWeatherLocalTime.text = weatherPublisherItem.location.localtime
             }
         }
 
