@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.*
 import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +22,8 @@ import gdsvn.tringuyen.weatherapp.presentation.weather.adapter.WeatherListAdapte
 import gdsvn.tringuyen.weatherapp.presentation.weather.viewmodel.WeatherViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import timber.log.Timber
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt.PromptStateChangeListener
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -42,6 +46,8 @@ class MainFragment : Fragment() {
     private lateinit var listAdapter: WeatherListAdapter
     private lateinit var recyclerView : RecyclerView
     private var progressDialog: ProgressDialog? = null
+    private var mFabPrompt: MaterialTapTargetPrompt? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +59,25 @@ class MainFragment : Fragment() {
 
         listAdapter = WeatherListAdapter()
         createDialog(context)
+    }
+
+    private fun addTapTarget() {
+
+
+        MaterialTapTargetPrompt.Builder(this)
+            .setTarget(R.id.txt_hello)
+            .setIcon(R.drawable.ic_search_white_24dp)
+            .setPrimaryText("Add your first City")
+            .setSecondaryText("Tap the search icon and add your favorites cities to get weather updates")
+            .setBackButtonDismissEnabled(true)
+            .setAnimationInterpolator(FastOutSlowInInterpolator())
+            .setPromptStateChangeListener(PromptStateChangeListener { prompt: MaterialTapTargetPrompt?, state: Int ->
+                if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
+                    mFabPrompt = null
+                    //Do something such as storing a value so that this prompt is never shown again
+                }
+            })
+            .create()?.show()
     }
 
     private fun createDialog(context: Context?) {
@@ -96,6 +121,7 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        addTapTarget()
         recyclerView = view.findViewById(R.id.list_recycler_view) as RecyclerView
         recyclerView.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -129,7 +155,6 @@ class MainFragment : Fragment() {
         })
     }
 
-
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -150,8 +175,8 @@ class MainFragment : Fragment() {
             }
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+
         inflater.inflate(R.menu.menu, menu)
     }
 
