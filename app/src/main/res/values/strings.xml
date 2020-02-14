@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">Weather App</string>
-
+    <string name="app_name">Weather of city</string>
     <string name="action_search">Search</string>
     <string name="action_refresh">Refresh</string>
     <string name="humidity_text">Humidity</string>
@@ -9,9 +8,10 @@
     <string name="retry_loading">Retry</string>
     <string name="error_loading">Error</string>
     <string name="search_title">Search for city</string>
+    <string name="add_your_first_city">Add your first City</string>
+    <string name="tap_the_search_icon">Tap the search icon and add your favorites cities to get weather\'s information updates</string>
+    <string name="refresh_weather">Refresh weather\'s information</string>
+    <string name="tap_the_refresh_icon">Tap the refresh icon to get latest weather\'s information</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
-
-
-
 </resources>

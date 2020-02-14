@@ -2,9 +2,9 @@
 <navigation xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    app:startDestination="@id/blankFragment">
+    app:startDestination="@id/mainFragment">
     <fragment
-        android:id="@+id/blankFragment"
+        android:id="@+id/mainFragment"
         android:name="gdsvn.tringuyen.weatherapp.presentation.weather.fragment.MainFragment"
         android:label="Blank"
         tools:layout="@layout/fragment_main" >
